@@ -1,13 +1,14 @@
 import os
 import time
-
+import random
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import *
 import songs
 from music import Ui_MusicApp
-from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput #, QMediaContent
-
+from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PyQt6.QtCore import QUrl, QTimer
+
+
 
 class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
     def __init__(self):
@@ -23,9 +24,9 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         # Globals
         global stopped
         global looped
-        global is_shuffeld
+        global is_shuffled
         looped = False
-        is_shuffeld = False
+        is_shuffled = False
 
         # Create Player
         self.player = QMediaPlayer()
@@ -39,7 +40,7 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         # Slider Timer
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.move_slider)
-        self.timer.start(1000)  # Actualizare la fiecare secundă
+        self.timer.start(1000)
 
 
         # Connection
@@ -49,6 +50,12 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.pause_btn.clicked.connect(self.pause_and_unpause)
         self.stop_btn.clicked.connect(self.stop_song)
         self.volume_dial.valueChanged.connect(self.volume_change)
+        self.next_btn.clicked.connect(self.next_song)
+        self.previous_btn.clicked.connect(self.previous_song)
+        self.shuffle_songs_btn.clicked.connect(self.shuffle_playlist)
+        self.loop_one_btn.clicked.connect(self.loop_on_song)
+
+        self.music_slider.sliderMoved.connect(lambda position: self.player.setPosition(position))
 
         self.show()
 
@@ -70,8 +77,8 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
                 song_duration = time.strftime("%H:%M:%S", time.localtime(self.player.duration() / 1000))
                 self.time_label.setText(f"{current_time} / {song_duration}")
 
-                print(f"Duration: {self.player.duration()}")
-                print(f"Current Position: {slider_position}")
+                # print(f"Duration: {self.player.duration()}")
+                # print(f"Current Position: {slider_position}")
         except Exception as e:
             print(f"Error in move_slider: {e}")
 
@@ -129,7 +136,6 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
             print(f"Stop song error: {e}")
 
 
-
     # Function to change the Volume
     def volume_change(self):
         try:
@@ -139,3 +145,163 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
             self.volume_label.setText(f"{self.initial_volume}")
         except Exception as e:
             print(f"Volume change error: {e}")
+
+
+
+    def default_next(self):
+        try:
+            # Get the current index of the selected song
+            current_index = self.loaded_songs_listWidget.currentRow()
+            if current_index == -1:
+                print("No song is currently selected.")
+                return
+
+            # Increment the index to go to the next song
+            next_index = current_index + 1
+
+            # Check if the next index is within bounds
+            if next_index >= len(songs.current_song_list):
+                print("No next song available.")
+                return
+
+            # Retrieve the next song and its URL
+            next_song = songs.current_song_list[next_index]
+            song_url = QUrl.fromLocalFile(next_song)
+
+            # Play the next song
+            self.player.setSource(song_url)
+            self.player.play()
+
+            self.loaded_songs_listWidget.setCurrentRow(next_index)
+            self.current_song_name.setText(os.path.basename(next_song))
+            self.current_song_path.setText(os.path.dirname(next_song))
+
+            print(f"Now playing: {next_song}")
+
+        except Exception as e:
+            print(f"Default Next error: {e}")
+
+    def looped_next(self):
+        try:
+            current_index = self.loaded_songs_listWidget.currentRow()
+            if current_index == -1:
+                print("No song is currently selected.")
+                return
+
+            # Increment index to move to the next song
+            next_index = current_index + 1
+
+            # Check if the next index is valid, loop back to the beginning if it exceeds the list
+            if next_index >= len(songs.current_song_list):
+                next_index = 0  # Loop back to the first song
+
+            song = songs.current_song_list[next_index]
+            song_url = QUrl.fromLocalFile(song)
+
+            self.player.setSource(song_url)
+            self.player.play()
+
+            # Update UI components and select the next song in the list
+            self.loaded_songs_listWidget.setCurrentRow(next_index)
+            self.current_song_name.setText(os.path.basename(song))
+            self.current_song_path.setText(os.path.dirname(song))
+
+            print(f"Now playing: {song}")
+        except Exception as e:
+            print(f"Looped Next error: {e}")
+
+
+    def shuffled_next(self):
+        try:
+            # Generate a random index within the range of the song list
+            next_index = random.randint(0, len(songs.current_song_list) - 1)
+
+            # Fetch the next song using the generated random index
+            next_song = songs.current_song_list[next_index]
+            song_url = QUrl.fromLocalFile(next_song)
+
+            # Set the source and play the song
+            self.player.setSource(song_url)
+            self.player.play()
+
+            # Update the UI components to reflect the change
+            self.loaded_songs_listWidget.setCurrentRow(next_index)
+            self.current_song_name.setText(os.path.basename(next_song))
+            self.current_song_path.setText(os.path.dirname(next_song))
+
+            print(f"Now playing: {next_song}")
+        except Exception as e:
+            print(f"Shuffled Next error: {e}")
+
+
+    # Play Next Song
+    def next_song(self):
+        try:
+            global looped
+            global is_shuffled
+
+            if is_shuffled:
+                self.shuffled_next()
+            elif looped:
+                self.looped_next()
+            else:
+                self.default_next()
+
+        except Exception as e:
+            print(f"Next Song error: {e}")
+
+
+    # Play Previous Song
+    def previous_song(self):
+        try:
+            song_index = self.loaded_songs_listWidget.currentRow()
+            previous_index = song_index - 1
+            previous_song = songs.current_song_list[previous_index]
+            song_url = QUrl.fromLocalFile(previous_song)
+            self.player.setSource(song_url)
+            self.player.play()
+            self.loaded_songs_listWidget.setCurrentRow(previous_index)
+
+            self.current_song_name.setText(f"{os.path.basename(previous_song)}")
+            self.current_song_path.setText(f"{os.path.dirname(previous_song)}")
+
+        except Exception as e:
+            print(f"Next Song error")
+
+    # Function to toggle loop on the current song
+    def loop_on_song(self):
+        try:
+            global looped
+            global is_shuffled
+
+            if not looped:
+                looped = True
+                self.shuffle_songs_btn.setEnabled(False)
+                print("Looping is now enabled.")
+            else:
+                looped = False
+                self.shuffle_songs_btn.setEnabled(True)
+                print("Looping is now disabled.")
+        except Exception as e:
+            print(f"Looping song error: {e}")
+
+
+    # Function to shuffle the playlist
+    def shuffle_playlist(self):
+        try:
+            global looped
+            global is_shuffled
+
+            if not is_shuffled:
+                is_shuffled = True
+                self.loop_one_btn.setEnabled(False)
+                print("Shuffling is now enabled.")
+            else:
+                is_shuffled = False
+                self.loop_one_btn.setEnabled(True)
+                print("Shuffling is now disabled.")
+        except Exception as e:
+            print(f"Shuffling song error: {e}")
+
+
+
