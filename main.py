@@ -4,10 +4,11 @@ import random
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import *
 import songs
+from db_functions import add_song_to_database_table
 from music import Ui_MusicApp
 from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PyQt6.QtCore import QUrl, QTimer
-
+from PyQt6.QtWidgets import QMessageBox
 
 
 class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
@@ -19,14 +20,22 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.audio_output = QAudioOutput()
         self.player = QMediaPlayer()
         self.player.setAudioOutput(self.audio_output)
+        self.default_next()
         self.stopped = False
 
         # Globals
         global stopped
         global looped
         global is_shuffled
+
+        # stopped =False
         looped = False
         is_shuffled = False
+
+
+        # # Database Stuff
+        # add_song_to_database_table('favorites')
+
 
         # Create Player
         self.player = QMediaPlayer()
@@ -36,15 +45,15 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.volume_dial.setValue(self.initial_volume)
         self.volume_label.setText(f"{self.initial_volume}")
 
-
         # Slider Timer
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.move_slider)
         self.timer.start(1000)
 
-
         # Connection
         # DEFAULT PAGE
+        self.player.positionChanged.connect(self.check_position)
+        self.player.mediaStatusChanged.connect(self.song_finished)
         self.add_songs_btn.clicked.connect(self.add_songs)
         self.play_btn.clicked.connect(self.play_song)
         self.pause_btn.clicked.connect(self.pause_and_unpause)
@@ -54,10 +63,33 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.previous_btn.clicked.connect(self.previous_song)
         self.shuffle_songs_btn.clicked.connect(self.shuffle_playlist)
         self.loop_one_btn.clicked.connect(self.loop_on_song)
+        self.delete_selected_btn.clicked.connect(self.remove_selected_song)
+        self.delete_all_songs_btn.clicked.connect(self.remove_all_songs)
+        self.song_list_btn.clicked.connect(self.switch_to_songs_tab)
+        self.playlists_btn.clicked.connect(self.switch_to_playlist_tab)
+        self.favourites_btn.clicked.connect(self.switch_to_favourites_tab)
 
         self.music_slider.sliderMoved.connect(lambda position: self.player.setPosition(position))
+        self.add_to_fav_btn.clicked.connect(self.add_song_to_favourites)
+
+
 
         self.show()
+
+    def song_finished(self, status):
+        print(f"Media status changed: {status}")  # Debugging output
+        if status == QMediaPlayer.MediaStatus.EndOfMedia:
+            print("EndOfMedia detected. Playing next song...")
+            self.next_song()
+        else:
+            print(f"Unhandled status: {status}")
+
+    def check_position(self, position):
+        duration = self.player.duration()
+        if duration > 0 and position >= duration - 1000:
+            print("Position almost at end, going to the next song...")
+            self.next_song()
+
 
 
     # Function to move the slider
@@ -161,7 +193,7 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
 
             # Check if the next index is within bounds
             if next_index >= len(songs.current_song_list):
-                print("No next song available.")
+                print("No next song")
                 return
 
             # Retrieve the next song and its URL
@@ -180,6 +212,7 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
 
         except Exception as e:
             print(f"Default Next error: {e}")
+
 
     def looped_next(self):
         try:
@@ -303,5 +336,88 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         except Exception as e:
             print(f"Shuffling song error: {e}")
 
+
+    # Remove One Song
+    def remove_selected_song(self):
+        try:
+            if self.loaded_songs_listWidget.count() == 0:
+                QMessageBox.information(
+                    self, 'Remove selected Song',
+                    'Playlist is empty'
+                )
+                return
+            current_index = self.loaded_songs_listWidget.currentRow()
+            self.loaded_songs_listWidget.takeItem(current_index)
+            songs.current_song_list.pop(current_index)
+        except Exception as e:
+            print(f"Remove selected song error: {e}")
+
+
+    # Remove All Song
+    def remove_all_songs(self):
+        try:
+            # Check if the playlist is empty
+            if self.loaded_songs_listWidget.count() == 0:
+                QMessageBox.information(
+                    self,
+                    'Remove All Songs',
+                    'The playlist is empty and there is nothing to remove.'
+                )
+                return
+
+            # Show a confirmation dialog
+            question = QMessageBox.question(
+                self,
+                'Remove All Songs',
+                'This action will remove all songs from the list and cannot be undone.\n'
+                'Do you want to continue?',
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
+            )
+
+            # If the user confirms, clear the playlist
+            if question == QMessageBox.StandardButton.Yes:
+                # Ensure stop_song is properly defined to stop playback
+                self.stop_song()
+                self.loaded_songs_listWidget.clear()
+                songs.current_song_list.clear()
+                print("All songs removed from the playlist.")
+
+        except Exception as e:
+            print(f"Error while removing all songs: {e}")
+
+
+    # FUNCTIONS TO SWITCH TABS
+    # Switch to Favourite
+    def switch_to_favourites_tab(self):
+        self.stackedWidget.setCurrentIndex(2)
+
+    # Switch to Playlist tab
+    def switch_to_playlist_tab(self):
+        self.stackedWidget.setCurrentIndex(1)
+
+    # Switch to Songs tab
+    def switch_to_songs_tab(self):
+        self.stackedWidget.setCurrentIndex(0)
+
+
+    # FAVOURITE FUNCTIONS
+    # Add song to favourites
+    def add_song_to_favourites(self):
+        current_index = self.loaded_songs_listWidget.currentRow()
+        if current_index is None:
+            QMessageBox.information(
+                self, 'Add Songs to Favourites',
+                'Select a song to add to favourites')
+            return
+        try:
+            song = songs.current_song_list[current_index]
+            add_song_to_database_table(song=f"{song}", table='favorites')  # Nu 'favourites'
+            QMessageBox.information(
+                self, 'Add Songs to Favourites',
+                f'{os.path.basename(song)} was successfully added to favourites')
+
+        except Exception as e:
+            print(f"Adding song to favourites error: {e}")
 
 
