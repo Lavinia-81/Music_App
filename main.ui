@@ -210,7 +210,7 @@ QPushButton:pressed{
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>80</x>
        <y>10</y>
        <width>111</width>
        <height>31</height>
@@ -218,16 +218,20 @@ QPushButton:pressed{
      </property>
      <property name="font">
       <font>
-       <pointsize>15</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <family>Algerian</family>
+       <pointsize>18</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(79, 208, 178);</string>
+      <string notr="true">color: rgb(79, 208, 178);
+
+font: 18pt &quot;Algerian&quot;;</string>
      </property>
      <property name="text">
-      <string>M Beatz</string>
+      <string>Lavinia D</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
@@ -506,6 +510,9 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="cursor">
      <cursorShape>ClosedHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(225, 255, 206, 241);</string>
     </property>
     <property name="maximum">
      <number>100</number>
@@ -1452,7 +1459,8 @@ border-radius:5px;</string>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 127);
-border-radius:15px;</string>
+border-radius:15px;
+</string>
        </property>
        <property name="text">
         <string>Song List</string>
@@ -1586,8 +1594,8 @@ border-radius:15px;</string>
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset>
-     <normaloff>:/img/utils/images/sliderHandle.png</normaloff>:/img/utils/images/sliderHandle.png</iconset>
+    <iconset resource="res.qrc">
+     <normaloff>:/img/utils/images/stop.png</normaloff>:/img/utils/images/stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>

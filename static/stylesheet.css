@@ -1,0 +1,248 @@
+/* styles.css */
+
+#MusicApp {
+    width: 880px;
+    height: 550px;
+    min-width: 880px;
+    min-height: 550px;
+    max-width: 880px;
+    max-height: 550px;
+}
+
+#background_image, #bd_overlay {
+    width: 880px;
+    height: 550px;
+}
+
+#title_frame {
+    border-radius: 10px;
+}
+
+#label {
+    color: rgb(79, 208, 178);
+    font-size: 18pt;
+    font-family: "Algerian";
+}
+
+#label_2 {
+    width: 32px;
+    height: 32px;
+}
+
+#frame_2 {
+    background-color: rgba(0, 0, 0, 150);
+    border-radius: 15px;
+}
+
+#label_3 {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(79, 208, 178);
+    font-size: 12pt;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#label_4 {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(79, 208, 178);
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+#label_5, #label_7 {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(79, 208, 178);
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+#label_6 {
+    color: rgb(255, 255, 255);
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+#label_9, #label_10 {
+    color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0);
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+#time_label {
+    color: rgb(255, 255, 255);
+    padding: 2px;
+    border-radius: 5px;
+}
+
+#frame_3 {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+}
+
+#frame_4, #frame_7  {
+    background-color: rgba(255, 255, 255, 50);
+    border-radius: 10px;
+}
+
+#frame_5, #frame_6 {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#current_song_name, #current_song_path {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(255, 255, 255);
+    font-size: 11pt;
+    font-weight: normal;
+}
+
+#add_to_fav_btn {
+    background-color: rgb(206, 206, 206);
+    color: rgb(255, 140, 64);
+    font-size: 10pt;
+    font-family: "Algerian";
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#add_to_playlist_btn {
+    background-color: rgb(82, 204, 34);
+    color: rgb(255, 255, 255);
+    font-size: 10pt;
+    font-family: "Algerian";
+    border-radius: 15px;
+    cursor: pointer;
+}
+#volume_dial {
+    background-color: rgb(206, 206, 206);
+    cursor: grab;
+}
+
+#volume_label {
+    color: rgb(36, 32, 32);
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+#play_btn,
+#pause_btn,
+#stop_btn,
+#previous_btn,
+#next_btn,
+#loop_one_btn,
+#shuffle_songs_btn  {
+    background-color: rgba(255, 255, 255, 0);
+    background-repeat: no-repeat;
+    border: none;
+    background-position: center center;
+}
+
+#play_btn:hover,
+#pause_btn:hover,
+#stop_btn:hover,
+#previous_btn:hover,
+#next_btn:hover,
+#loop_one_btn:hover,
+#loop_one_btn:checked,
+#shuffle_songs_btn:hover,
+#shuffle_songs_btn:checked  {
+    background-color: rgba(255, 255, 255, 100);
+}
+
+#music_slider::groove:horizontal {
+    border: 1px solid #999999;
+    height: 15px;
+    padding: 3px;
+    background: rgba(0, 255, 127, 100);
+    margin: 2px 0;
+    border-radius: 11px;
+}
+
+#music_slider::handle:horizontal {
+    background: rgb(255, 200, 50);
+    border: 1px solid #5c5c5c;
+    width: 18px;
+    margin: -2px 0;
+    border-radius: 9px;
+}
+
+#stackedWidget, #song_list_page {
+    background-color: rgba(0, 0, 0, 50);
+    border-radius: 15px;
+}
+
+#add_songs_btn, #delete_selected_btn, #delete_all_songs_btn  {
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#loaded_songs_listWidget, #playlists_listWidget {
+    color: rgb(86, 227, 194);
+    background-color: rgba(0, 0, 0, 100);
+    selection-background-color: rgb(255, 140, 64);
+    selection-color: rgb(255, 255, 255);
+    padding: 10px;
+    cursor: pointer;
+}
+
+#load_selected_playlist_btn {
+    background-color: rgb(70, 200, 135);
+    border-radius: 15px;
+     text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#new_playlist_btn, #remove_selected_playlist_btn, #remove_all_playlists_btn  {
+    background-color: rgb(234, 154, 33);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#new_playlist_btn:hover {
+    color: rgb(0, 85, 0);
+    background-color: rgb(0, 255, 127);
+}
+
+#remove_selected_playlist_btn:hover {
+    color: rgb(202, 0, 0);
+    background-color: rgb(255, 176, 176);
+}
+
+#remove_all_playlists_btn:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 44, 44);
+}
+
+#favourites_listWidget {
+    color: rgb(86, 227, 194);
+    background-color: rgba(0, 0, 0, 100);
+    selection-background-color: rgb(255, 140, 64);
+    selection-color: rgb(255, 255, 255);
+    padding: 10px;
+    cursor: pointer;
+}
+
+#delete_selected_favourite_btn, #delete_all_favourites_btn {
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#song_list_btn,
+#playlists_btn,
+#favourites_btn {
+    background-color: rgb(32, 225, 86);
+    color: black;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 120px;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
