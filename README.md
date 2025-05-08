@@ -19,13 +19,13 @@
 ## Technical Details
 - **Programming Language**: Python
 - **GUI Framework**: PyQt6
-- **Database**: SQLite (`db.sqlite3` is used to store playlists and songs)
+- **Database**: SQLite (`app_db.db` is used to store playlists and songs)
 - **Database Management**: **DB Browser for SQLite** (Used for editing and managing the database)
 - **Core Components**:
   - `QMediaPlayer`: Handles audio playback.
   - `QListWidget`: Displays the playlist of songs.
   - Various buttons for functionalities like shuffle, loop, and navigation.
-  - **SQLite Database (`db.sqlite3`)**: Stores playlists and favorite songs.
+  - **SQLite Database (`app_db.db`)**: Stores playlists and favorite songs.
   - **SQL Queries**: Used to manage song entries (e.g., INSERT, DELETE, UPDATE) within the database.
   
 ---
@@ -58,7 +58,7 @@ Here’s a list of buttons in the application and their respective functionaliti
 2. **Run the Application**:
    - Launch the app by executing the main script:
      ```bash
-     python Music_App.py
+     python run.py
      ```
 
 3. **Using the Features**:
