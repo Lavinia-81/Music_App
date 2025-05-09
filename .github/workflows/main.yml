@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # ✅ FIXED
+    runs-on: ubuntu-latest  
 
     steps:
     - name: Checkout code
@@ -33,7 +33,7 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Install PyQt6 & System Dependencies  # ✅ FIXED
+    - name: Install PyQt6 & System Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt || pip install PyQt6
@@ -53,4 +53,4 @@ jobs:
             print(f'Database file already exists at: {app_database}');"
 
     - name: Run Application
-      run: python run.py  # ✅ FIXED
+      run: python run.py
