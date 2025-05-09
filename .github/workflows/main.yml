@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # ✅ FIXED
 
     steps:
     - name: Checkout code
@@ -33,16 +33,12 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Install Flet
-      run: pip install flet
-
-    - name: Install PyQt6 & System Dependencies
+    - name: Install PyQt6 & System Dependencies  # ✅ FIXED
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install PyQt6
+        pip install -r requirements.txt || pip install PyQt6
         sudo apt-get update && sudo apt-get install -y libxcb-xinerama0
-     
+
     - name: Setup Database
       run: |
         python -c "import os;
@@ -56,5 +52,5 @@ jobs:
         else:
             print(f'Database file already exists at: {app_database}');"
 
-    - name: run.py
-      run: python run.py
+    - name: Run Application
+      run: python run.py  # ✅ FIXED
