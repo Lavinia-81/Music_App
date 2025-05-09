@@ -1,1 +1,4 @@
 PyQt6==6.9.0
+random
+flet
+sqlite3  # (Built-in, but ensure it's compatible)
