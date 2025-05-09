@@ -24,7 +24,7 @@ class PlaylistManager:
             self.main_window.playlists_listWidget.clear()
 
             for playlist in playlists:
-                item = QListWidgetItem(QIcon("images/dialog-music.png"), playlist)
+                item = QListWidgetItem(QIcon(r"utils/images/dialog-music.png"), playlist)
                 self.main_window.playlists_listWidget.addItem(item)
 
             print(f"Loaded {len(playlists)} playlists.")
@@ -207,7 +207,7 @@ class PlaylistManager:
                 item = QListWidgetItem(QIcon("images/MusicListItem.png"), os.path.basename(song))
                 self.main_window.loaded_songs_listWidget.addItem(item)
 
-            print(f"Loaded {len(playlist_songs)} songs from playlist '{playlist}'.")
+            # print(f"Loaded {len(playlist_songs)} songs from playlist '{playlist}'.")
 
         except Exception as e:
             print(f"Error loading songs from playlist '{playlist}': {e}")
@@ -219,9 +219,8 @@ class PlaylistManager:
             playlist = self.main_window.playlists_listWidget.currentItem().text()
             songs = fetch_all_songs_from_database_table(playlist)
             songs_only = [os.path.basename(song[0]) for song in songs]
-            playlist_dialog = PlaylistDialog(songs, f'{playlist}')
+            playlist_dialog = PlaylistDialog(songs_only, f'{playlist}')
             playlist_dialog.exec()
-            print("Playlist:", playlist)
-            print("Songs:", songs)
+
         except Exception as e:
             print(f"Showing Playlist Content Error: {e}")

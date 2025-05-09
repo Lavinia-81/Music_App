@@ -1673,13 +1673,13 @@ border-radius:15px;</string>
     <string>Save Selected to a Playlist</string>
    </property>
   </action>
-  <action name="actionSave_all_to_a_playlist">
+  <action name="actionSave_all_to_a_Playlist">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/utils/images/dialog-music.png</normaloff>:/img/utils/images/dialog-music.png</iconset>
    </property>
    <property name="text">
-    <string>Save all to a playlist</string>
+    <string>Save all to a Playlist</string>
    </property>
   </action>
  </widget>

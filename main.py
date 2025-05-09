@@ -9,7 +9,7 @@ from utils.context_menu import ContextMenu
 from utils.playlist_manager import PlaylistManager
 from utils.favourites_manager import FavouritesManager
 from utils.delete_manager import DeleteManager
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QAction, QPixmap
 from PyQt6.QtWidgets import QMainWindow
 
 
@@ -21,16 +21,17 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.setupUi(self)
         self.window = QMainWindow()
         self.main_window = main_window if main_window is not None else self
+        self.player = QMediaPlayer()
         self.stopped = False
         self.default_next()
         self.songs = []
         self.audio_output = QAudioOutput()
-        self.player = QMediaPlayer()
         self.player.setAudioOutput(self.audio_output)
         self.favourites_manager = FavouritesManager(self, songs)
         self.context_menu = ContextMenu(self)
         self.playlist_manager = PlaylistManager(self)
         self.delete_manager = DeleteManager(self)
+        self.player.mediaStatusChanged.connect(self.on_media_finished)
 
         with open("static/stylesheet.css", "r") as file:
             self.setStyleSheet(file.read())
@@ -40,21 +41,21 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         global looped
         global is_shuffled
         global slide_index
+
         stopped =False
         looped = False
         is_shuffled = False
         slide_index = 0
 
         # Context Menus
-        self.context_menu.playlist_context_menu()
-        self.context_menu.loaded_songs_context_menu()
-        self.context_menu.favourites_songs_context_menu()
+        self.playlist_context_menu()
+        self.loaded_songs_context_menu()
+        self.favourite_songs_context_menu()
 
         # Database Stuff
         create_database_or_database_table('favourites')
         self.favourites_manager.load_favourites_into_app()
         self.playlist_manager.load_playlists()
-
 
 
         # Create Player
@@ -77,7 +78,6 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         self.music_slider.sliderMoved.connect(lambda pos: self.player.setPosition(pos))
         self.player.mediaStatusChanged.connect(self.song_finished)
         self.player.mediaStatusChanged.connect(lambda status: print(f"Media status changed: {status}"))
-        self.player.mediaStatusChanged.connect(self.context_menu.slideshow)
         self.player.mediaStatusChanged.connect(self.on_media_finished)
         self.player.positionChanged.connect(self.music_slider.setValue)
         self.player.positionChanged.connect(self.check_position)
@@ -139,8 +139,9 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
             print(f"Error connecting button: {e}")
 
 
+
         # # Playlist Actions
-        self.actionSave_all_to_a_playlist.triggered.connect(self.playlist_manager.add_all_current_songs_to_a_playlist)
+        self.actionSave_all_to_a_Playlist.triggered.connect(self.playlist_manager.add_all_current_songs_to_a_playlist)
         self.actionSave_Selected_to_a_Playlist.triggered.connect(self.playlist_manager.add_a_song_to_a_playlist)
         self.actionDelete_All_Playlists.triggered.connect(self.playlist_manager.delete_all_playlists)
         self.actionDelete_Selected_Playlist.triggered.connect(self.playlist_manager.delete_playlist)
@@ -307,6 +308,31 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
             print(f"Next Song error: {e}")
 
 
+
+    # Function to Check position
+    def check_position(self, position):
+        duration = self.player.duration()
+        if duration > 0 and position >= duration - 1000:
+            print("Position almost at end, waiting before next song...")
+            QTimer.singleShot(500, self.next_song)
+
+        self.default_next()
+
+        def moveApp(event):
+            if event.buttons() == Qt.MouseButton.LeftButton:
+                self.move(self.pos() + event.globalPosition().toPoint() - self.initialPosition)
+                self.initialPosition = event.globalPosition().toPoint()
+                event.accept()
+
+        self.title_frame.mouseMoveEvent = moveApp
+
+
+
+    # Function to handle the mouse position
+    def mousePressEvent(self, event):
+        self.initialPosition = event.globalPos()
+
+
     # Finished Song
     def song_finished(self, status):
         if status == QMediaPlayer.MediaStatus.EndOfMedia:
@@ -315,20 +341,6 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
         else:
             print(f"Ignoring status: {status}")
             self.default_next()
-
-
-    # Function to Check position
-    def check_position(self, position):
-        duration = self.player.duration()
-        if duration > 0 and position >= duration - 1000:
-            print("Position almost at end, waiting before next song...")
-            QTimer.singleShot(500, self.next_song)
-        self.default_next()
-
-
-    # Function to handle the mouse position
-    def mousePressEvent(self, event):
-        self.initialPosition = event.globalPos()
 
 
     # Move Slider
@@ -372,6 +384,7 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
     def default_next(self):
         try:
             current_song_url = self.player.source().toLocalFile()
+
             if self.stackedWidget.currentIndex() == 0:
                 song_list = songs.current_song_list
             elif self.stackedWidget.currentIndex() == 2:
@@ -384,8 +397,11 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
                 print("Current song not found in list.")
                 return
 
+            # song_index = song_list.index(current_song_url)
+            # next_index = song_index + 1
             song_index = song_list.index(current_song_url)
-            next_index = song_index + 1
+            next_index = (song_index + 1) % len(song_list)
+
 
             if next_index >= len(song_list):
                 print("No next song available.")
@@ -416,10 +432,8 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
     # Media finished
     def on_media_finished(self, status):
         if status == QMediaPlayer.MediaStatus.EndOfMedia:
-            print("Song finished! Moving to next.")
-
-            self.next_song()
-            return
+            print("Song finished! Moving to next track...")
+            self.default_next()
 
         elif self.player.mediaStatus() != QMediaPlayer.MediaStatus.LoadedMedia:
             print("Error: Media is not loaded yet!")
@@ -477,6 +491,7 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
 
         except Exception as e:
             print(f"Looped Next error: {e}")
+
 
 
     # Shuffled Next Function
@@ -564,3 +579,42 @@ class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
     # Switch to Songs List tab
     def switch_to_songs_tab(self):
         self.stackedWidget.setCurrentIndex(0)
+
+
+
+    # CONTEXT MENUS
+    # Playlist Context Menu
+    def playlist_context_menu(self):
+        self.playlists_listWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.playlists_listWidget.addAction(self.actionLoad_Selected_Playlist)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.playlists_listWidget.addAction(self.actionDelete_Selected_Playlist)
+        self.playlists_listWidget.addAction(self.actionDelete_All_Playlists)
+
+
+    # Loaded Songs Context Menu
+    def loaded_songs_context_menu(self):
+        self.loaded_songs_listWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.loaded_songs_listWidget.addAction(self.actionPlay)
+        self.loaded_songs_listWidget.addAction(self.actionPause_Unpause)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.loaded_songs_listWidget.addAction(self.actionPrevious)
+        self.loaded_songs_listWidget.addAction(self.actionNext)
+        self.loaded_songs_listWidget.addAction(self.actionStop)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.loaded_songs_listWidget.addAction(self.actionAdd_Selected_to_Favourites)
+        self.loaded_songs_listWidget.addAction(self.actionAdd_all_to_Favouries)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.loaded_songs_listWidget.addAction(self.actionSave_Selected_to_a_Playlist)
+        self.loaded_songs_listWidget.addAction(self.actionSave_all_to_a_Playlist)
+
+
+     # Loaded Songs Context Menu
+    def favourite_songs_context_menu(self):
+        self.favourites_listWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        self.favourites_listWidget.addAction(self.actionRemove_Selected_Favourite)
+        self.favourites_listWidget.addAction(self.actionRemove_All_Favourites)
