@@ -497,11 +497,11 @@ class Ui_MusicApp(object):
         icon15.addPixmap(QtGui.QPixmap("utils/images/MusicListItem.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.actionSave_Selected_to_a_Playlist.setIcon(icon15)
         self.actionSave_Selected_to_a_Playlist.setObjectName("actionSave_Selected_to_a_Playlist")
-        self.actionSave_all_to_a_playlist = QtGui.QAction(parent=MusicApp)
+        self.actionSave_all_to_a_Playlist = QtGui.QAction(parent=MusicApp)
         icon16 = QtGui.QIcon()
         icon16.addPixmap(QtGui.QPixmap("utils/images/dialog-music.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.actionSave_all_to_a_playlist.setIcon(icon16)
-        self.actionSave_all_to_a_playlist.setObjectName("actionSave_all_to_a_playlist")
+        self.actionSave_all_to_a_Playlist.setIcon(icon16)
+        self.actionSave_all_to_a_Playlist.setObjectName("actionSave_all_to_a_Playlist")
 
         self.retranslateUi(MusicApp)
         self.stackedWidget.setCurrentIndex(0)
@@ -544,7 +544,7 @@ class Ui_MusicApp(object):
         self.actionRemove_Selected_Favourite.setText(_translate("MusicApp", "Remove Selected"))
         self.actionRemove_All_Favourites.setText(_translate("MusicApp", "Remove All"))
         self.actionSave_Selected_to_a_Playlist.setText(_translate("MusicApp", "Save Selected to a Playlist"))
-        self.actionSave_all_to_a_playlist.setText(_translate("MusicApp", "Save all to a playlist"))
+        self.actionSave_all_to_a_Playlist.setText(_translate("MusicApp", "Save all to a Playlist"))
 
 
 if __name__ == "__main__":

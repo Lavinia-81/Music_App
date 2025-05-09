@@ -9,10 +9,10 @@ if not os.path.exists(database_dir):
     print(f"Creating database directory at: {database_dir}")
     os.makedirs(database_dir)
 
-if not os.path.exists(app_database):
-    print(f"Creating new database file at: {app_database}")
-else:
-    print(f"Database file already exists at: {app_database}")
+# if not os.path.exists(app_database):
+#     print(f"Creating new database file at: {app_database}")
+# else:
+#     print(f"Database file already exists at: {app_database}")
 
 
 

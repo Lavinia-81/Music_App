@@ -21,11 +21,11 @@ class FavouritesManager:
         try:
             favourite_songs = fetch_all_songs_from_database_table('favourites')
 
-            print(f"Fetched favourites from DB: {favourite_songs}")
+            # print(f"Fetched favourites from DB: {favourite_songs}")
 
             self.main_window.favourites_listWidget.clear()
             songs.favourites_song_list.clear()
-            print("Fetching songs from database:", favourite_songs)
+            # print("Fetching songs from database:", favourite_songs)
 
             for favourite in favourite_songs:
                 songs.favourites_song_list.append(favourite)
@@ -33,7 +33,7 @@ class FavouritesManager:
                 self.main_window.favourites_listWidget.addItem(
                     QListWidgetItem(QIcon("utils/images/like.png"), os.path.basename(favourite)))
 
-            print("Loaded favourites (AFTER ADDING):", songs.favourites_song_list)
+            # print("Loaded favourites (AFTER ADDING):", songs.favourites_song_list)
         except Exception as e:
             print(f"Error loaded favourites: {e}")
 
@@ -41,7 +41,9 @@ class FavouritesManager:
     # Load All Favourites Songs
     def add_all_songs_to_favourites(self):
         if not self.songs.current_song_list:
-            QMessageBox.information(self.main_window, 'Add songs to favourites', 'No songs have been loaded')
+            QMessageBox.information(self.main_window,
+                                    'Add songs to favourites',
+                                    'No songs have been loaded')
             return
 
         try:
@@ -60,7 +62,7 @@ class FavouritesManager:
     def add_song_to_favourites(self):
         current_index = self.main_window.loaded_songs_listWidget.currentRow()
         print(f"Selected index: {current_index}")
-        print(f"Current song list: {self.songs.current_song_list}")
+        # print(f"Current song list: {self.songs.current_song_list}")
 
         if current_index < 0:
             QMessageBox.information(self.main_window,
@@ -114,7 +116,7 @@ class FavouritesManager:
                 "Remove Song from Favourites",
                 "Favourites list is empty"
             )
-            print("⚠ Favourites list is empty")
+            print("Favourites list is empty")
             return
 
         try:
@@ -130,8 +132,7 @@ class FavouritesManager:
                     "Favourites",
                     "No songs left in favourites!"
                 )
-                print("✅ All songs removed successfully!")
+                print("All songs removed successfully!")
 
         except Exception as e:
-            print(f"❌ Removing all songs error: {e}")
-
+            print(f"Removing all songs error: {e}")
