@@ -10,6 +10,7 @@ class Ui_MusicApp(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("utils/images/app_icon.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MusicApp.setWindowIcon(icon)
+
         self.centralwidget = QtWidgets.QWidget(parent=MusicApp)
         self.centralwidget.setObjectName("centralwidget")
         self.background_image = QtWidgets.QLabel(parent=self.centralwidget)

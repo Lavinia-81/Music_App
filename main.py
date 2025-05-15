@@ -16,7 +16,6 @@ from utils.delete_manager import DeleteManager
 
 
 
-
 class ModernMusicPlayer(QMainWindow, Ui_MusicApp):
     def __init__(self, main_window=None):
         super().__init__()

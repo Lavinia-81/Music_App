@@ -3,11 +3,10 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QInputDialog
 from PyQt6.QtGui import QIcon
 import os.path
 
-from PyQt6.uic.properties import QtWidgets
-
 from db_functions import *
 from utils.playlist_popup import PlaylistDialog
 from utils import songs
+
 
 
 class PlaylistManager:

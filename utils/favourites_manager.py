@@ -11,7 +11,6 @@ class FavouritesManager:
         self.main_window = main_window
         self.songs = songs_module  # Store reference to song management module
 
-        # Ensure that favourites_song_list exists in songs_module
         if not hasattr(self.songs, "favourites_song_list"):
             self.songs.favourites_song_list = []
 

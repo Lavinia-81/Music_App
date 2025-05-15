@@ -47,5 +47,3 @@ class PlaylistDialog(QtWidgets.QDialog):
             "selection-color: rgb(22, 16, 182);\n"
             "padding: 10px;\n"
         )
-
-

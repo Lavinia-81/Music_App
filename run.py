@@ -9,3 +9,4 @@ app.setStyle('Fusion')
 window = ModernMusicPlayer()
 sys.exit(app.exec())
 
+
