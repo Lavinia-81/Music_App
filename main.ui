@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="res.qrc">
-    <normaloff>:/img/utils/images/app_icon.png</normaloff>:/img/utils/images/app_icon.png</iconset>
+    <normaloff>utils/images/app_icon.png</normaloff>utils/images/app_icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -159,7 +159,7 @@ QPushButton:pressed{
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/img/utils/images/quit.png</normaloff>:/img/utils/images/quit.png</iconset>
+       <normaloff>utils/images/quit.png</normaloff>utils/images/quit.png</iconset>
      </property>
      <property name="flat">
       <bool>true</bool>
@@ -201,7 +201,7 @@ QPushButton:pressed{
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/img/utils/images/min.png</normaloff>:/img/utils/images/min.png</iconset>
+       <normaloff>utils/images/min.png</normaloff>utils/images/min.png</iconset>
      </property>
      <property name="flat">
       <bool>true</bool>
@@ -247,7 +247,7 @@ font: 18pt &quot;Algerian&quot;;</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="res.qrc">:/img/utils/images/app_icon.png</pixmap>
+      <pixmap resource="res.qrc">utils/images/app_icon.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -322,7 +322,7 @@ color: rgb(79, 208, 178);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="res.qrc">:/img/utils/images/current-music.png</pixmap>
+      <pixmap resource="res.qrc">utils/images/current-music.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -452,7 +452,7 @@ color: rgb(255, 140, 64);</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/img/utils/images/like.png</normaloff>:/img/utils/images/like.png</iconset>
+       <normaloff>utils/images/like.png</normaloff>utils/images/like.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -489,7 +489,7 @@ color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset resource="res.qrc">
-       <normaloff>:/img/utils/images/music_list.png</normaloff>:/img/utils/images/music_list.png</iconset>
+       <normaloff>utils/images/music_list.png</normaloff>utils/images/music_list.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -589,7 +589,7 @@ QPushButton:hover{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/pase.png</normaloff>:/img/utils/images/pase.png</iconset>
+            <normaloff>utils/images/pase.png</normaloff>utils/images/pase.png</iconset>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -626,7 +626,7 @@ QPushButton:hover{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/play.png</normaloff>:/img/utils/images/play.png</iconset>
+            <normaloff>utils/images/play.png</normaloff>utils/images/play.png</iconset>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -663,7 +663,7 @@ QPushButton:hover{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/stop.png</normaloff>:/img/utils/images/stop.png</iconset>
+            <normaloff>utils/images/stop.png</normaloff>utils/images/stop.png</iconset>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -700,7 +700,7 @@ QPushButton:hover{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/pre.png</normaloff>:/img/utils/images/pre.png</iconset>
+            <normaloff>utils/images/pre.png</normaloff>utils/images/pre.png</iconset>
           </property>
           <property name="flat">
            <bool>true</bool>
@@ -743,7 +743,7 @@ QPushButton:hover{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/next.png</normaloff>:/img/utils/images/next.png</iconset>
+            <normaloff>utils/images/next.png</normaloff>utils/images/next.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -796,7 +796,7 @@ QPushButton:checked{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/loop-one.png</normaloff>:/img/utils/images/loop-one.png</iconset>
+            <normaloff>utils/images/loop-one.png</normaloff>utils/images/loop-one.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -853,7 +853,7 @@ QPushButton:checked{
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/img/utils/images/play-random.png</normaloff>:/img/utils/images/play-random.png</iconset>
+            <normaloff>utils/images/play-random.png</normaloff>utils/images/play-random.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -1015,7 +1015,7 @@ border-radius:5px;</string>
               </property>
               <property name="icon">
                <iconset resource="res.qrc">
-                <normaloff>:/img/utils/images/addFromLocal.png</normaloff>:/img/utils/images/addFromLocal.png</iconset>
+                <normaloff>utils/images/addFromLocal.png</normaloff>utils/images/addFromLocal.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1039,7 +1039,7 @@ border-radius:5px;</string>
               </property>
               <property name="icon">
                <iconset resource="res.qrc">
-                <normaloff>:/img/utils/images/clear.png</normaloff>:/img/utils/images/clear.png</iconset>
+                <normaloff>utils/images/clear.png</normaloff>utils/images/clear.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1063,7 +1063,7 @@ border-radius:5px;</string>
               </property>
               <property name="icon">
                <iconset resource="res.qrc">
-                <normaloff>:/img/utils/images/remove.png</normaloff>:/img/utils/images/remove.png</iconset>
+                <normaloff>utils/images/remove.png</normaloff>utils/images/remove.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1382,7 +1382,7 @@ border-radius:5px;</string>
       </property>
       <property name="icon">
        <iconset resource="res.qrc">
-        <normaloff>:/img/utils/images/clear.png</normaloff>:/img/utils/images/clear.png</iconset>
+        <normaloff>utils/images/clear.png</normaloff>utils/images/clear.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -1412,7 +1412,7 @@ border-radius:5px;</string>
       </property>
       <property name="icon">
        <iconset resource="res.qrc">
-        <normaloff>:/img/utils/images/remove.png</normaloff>:/img/utils/images/remove.png</iconset>
+        <normaloff>utils/images/remove.png</normaloff>utils/images/remove.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -1559,7 +1559,7 @@ border-radius:15px;</string>
   <action name="actionPlay">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/pase.png</normaloff>:/img/utils/images/pase.png</iconset>
+     <normaloff>utils/images/pase.png</normaloff>utils/images/pase.png</iconset>
    </property>
    <property name="text">
     <string>Play</string>
@@ -1568,7 +1568,7 @@ border-radius:15px;</string>
   <action name="actionPause_Unpause">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/play.png</normaloff>:/img/utils/images/play.png</iconset>
+     <normaloff>utils/images/play.png</normaloff>utils/images/play.png</iconset>
    </property>
    <property name="text">
     <string>Pause/Unpause</string>
@@ -1577,7 +1577,7 @@ border-radius:15px;</string>
   <action name="actionNext">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/next.png</normaloff>:/img/utils/images/next.png</iconset>
+     <normaloff>utils/images/next.png</normaloff>utils/images/next.png</iconset>
    </property>
    <property name="text">
     <string>Next</string>
@@ -1586,7 +1586,7 @@ border-radius:15px;</string>
   <action name="actionPrevious">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/pre.png</normaloff>:/img/utils/images/pre.png</iconset>
+     <normaloff>utils/images/pre.png</normaloff>utils/images/pre.png</iconset>
    </property>
    <property name="text">
     <string>Previous</string>
@@ -1595,7 +1595,7 @@ border-radius:15px;</string>
   <action name="actionStop">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/stop.png</normaloff>:/img/utils/images/stop.png</iconset>
+     <normaloff>utils/images/stop.png</normaloff>utils/images/stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -1604,7 +1604,7 @@ border-radius:15px;</string>
   <action name="actionAdd_Selected_to_Favourites">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/like.png</normaloff>:/img/utils/images/like.png</iconset>
+     <normaloff>utils/images/like.png</normaloff>utils/images/like.png</iconset>
    </property>
    <property name="text">
     <string>Add Selected to Favourites</string>
@@ -1613,7 +1613,7 @@ border-radius:15px;</string>
   <action name="actionAdd_all_to_Favouries">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/like.png</normaloff>:/img/utils/images/like.png</iconset>
+     <normaloff>utils/images/like.png</normaloff>utils/images/like.png</iconset>
    </property>
    <property name="text">
     <string>Add all to Favouries</string>
@@ -1622,7 +1622,7 @@ border-radius:15px;</string>
   <action name="actionLoad_Selected_Playlist">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/music_list.png</normaloff>:/img/utils/images/music_list.png</iconset>
+     <normaloff>utils/images/music_list.png</normaloff>utils/images/music_list.png</iconset>
    </property>
    <property name="text">
     <string>Load Selected</string>
@@ -1631,7 +1631,7 @@ border-radius:15px;</string>
   <action name="actionDelete_Selected_Playlist">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/clear.png</normaloff>:/img/utils/images/clear.png</iconset>
+     <normaloff>utils/images/clear.png</normaloff>utils/images/clear.png</iconset>
    </property>
    <property name="text">
     <string>Delete Selected</string>
@@ -1649,7 +1649,7 @@ border-radius:15px;</string>
   <action name="actionRemove_Selected_Favourite">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/clear.png</normaloff>:/img/utils/images/clear.png</iconset>
+     <normaloff>utils/images/clear.png</normaloff>utils/images/clear.png</iconset>
    </property>
    <property name="text">
     <string>Remove Selected</string>
@@ -1658,7 +1658,7 @@ border-radius:15px;</string>
   <action name="actionRemove_All_Favourites">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/remove.png</normaloff>:/img/utils/images/remove.png</iconset>
+     <normaloff>utils/images/remove.png</normaloff>utils/images/remove.png</iconset>
    </property>
    <property name="text">
     <string>Remove All</string>
@@ -1667,7 +1667,7 @@ border-radius:15px;</string>
   <action name="actionSave_Selected_to_a_Playlist">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/MusicListItem.png</normaloff>:/img/utils/images/MusicListItem.png</iconset>
+     <normaloff>utils/images/MusicListItem.png</normaloff>utils/images/MusicListItem.png</iconset>
    </property>
    <property name="text">
     <string>Save Selected to a Playlist</string>
@@ -1676,7 +1676,7 @@ border-radius:15px;</string>
   <action name="actionSave_all_to_a_Playlist">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/utils/images/dialog-music.png</normaloff>:/img/utils/images/dialog-music.png</iconset>
+     <normaloff>utils/images/dialog-music.png</normaloff>utils/images/dialog-music.png</iconset>
    </property>
    <property name="text">
     <string>Save all to a Playlist</string>

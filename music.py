@@ -555,3 +555,5 @@ if __name__ == "__main__":
     ui.setupUi(MusicApp)
     MusicApp.show()
     sys.exit(app.exec())
+
+
