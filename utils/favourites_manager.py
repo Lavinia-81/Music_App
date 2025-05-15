@@ -9,8 +9,9 @@ from utils import songs
 class FavouritesManager:
     def __init__(self, main_window, songs_module):
         self.main_window = main_window
-        self.songs = songs_module  # Ensure songs_module is passed correctly
+        self.songs = songs_module  # Store reference to song management module
 
+        # Ensure that favourites_song_list exists in songs_module
         if not hasattr(self.songs, "favourites_song_list"):
             self.songs.favourites_song_list = []
 
@@ -23,10 +24,11 @@ class FavouritesManager:
 
             # print(f"Fetched favourites from DB: {favourite_songs}")
 
-            self.main_window.favourites_listWidget.clear()
-            songs.favourites_song_list.clear()
+            self.main_window.favourites_listWidget.clear() # Clear UI list
+            songs.favourites_song_list.clear() # Clear local favourites list
             # print("Fetching songs from database:", favourite_songs)
 
+            # Add retrieved favourite songs to UI list
             for favourite in favourite_songs:
                 songs.favourites_song_list.append(favourite)
 
@@ -40,17 +42,18 @@ class FavouritesManager:
 
     # Load All Favourites Songs
     def add_all_songs_to_favourites(self):
-        if not self.songs.current_song_list:
+        if not self.songs.current_song_list: # Ensure there are songs to add
             QMessageBox.information(self.main_window,
                                     'Add songs to favourites',
                                     'No songs have been loaded')
             return
 
         try:
+            # Add each song to the favourites database
             for song in self.songs.current_song_list:
                 add_song_to_database_table(song, 'favourites')
 
-            self.load_favourites_into_app()
+            self.load_favourites_into_app() # Reload favourites into the UI
 
             print(f"All songs added to favourites.")
 
@@ -58,22 +61,22 @@ class FavouritesManager:
             print(f"Error adding songs to favourites: {e}")
 
 
-    # Add Song to Favourites
+    # Add a selected song to favourites
     def add_song_to_favourites(self):
         current_index = self.main_window.loaded_songs_listWidget.currentRow()
         print(f"Selected index: {current_index}")
         # print(f"Current song list: {self.songs.current_song_list}")
 
-        if current_index < 0:
+        if current_index < 0: # Ensure a song is selected
             QMessageBox.information(self.main_window,
                                     "Add Songs to Favourites",
                                     "Select a song to add to favourites")
             return
 
         try:
-            song = self.songs.current_song_list[current_index]
-            add_song_to_database_table(song=f"{song}", table='favourites')
-            self.load_favourites_into_app()
+            song = self.songs.current_song_list[current_index] # Get selected song
+            add_song_to_database_table(song=f"{song}", table='favourites')  # Add song to favourites DB
+            self.load_favourites_into_app() # Reload UI
 
             QMessageBox.information(self.main_window,
                                     "Add Songs to Favourites",
@@ -84,24 +87,24 @@ class FavouritesManager:
             print(f"Adding song to favourites error: {e}")
 
 
-    # Remove Song From Favourites
+    # Remove a selected song from favourites
     def remove_song_from_favourites(self):
-        if self.main_window.favourites_listWidget.count() == 0:
-            QMessageBox.information(self, 'Remove Song from Favourites', 'Favourites list is empty')
+        if self.main_window.favourites_listWidget.count() == 0: # Ensure there are favourites to remove
+            QMessageBox.information(self.main_window, 'Remove Song from Favourites', 'Favourites list is empty')
             return
 
-        current_index = self.main_window.favourites_listWidget.currentRow()
+        current_index = self.main_window.favourites_listWidget.currentRow() # Get selected song index
         if current_index is None:  #== -1:
-            QMessageBox.information(self, 'Remove Song from Favourites', 'Select a song to remove')
+            QMessageBox.information(self.main_window, 'Remove Song from Favourites', 'Select a song to remove')
             return
 
         try:
-            song_to_remove = songs.favourites_song_list[current_index]
-            delete_song_from_database_table(song=song_to_remove, table='favourites')
+            song_to_remove = songs.favourites_song_list[current_index] # Get song to be removed
+            delete_song_from_database_table(song=song_to_remove, table='favourites') # Remove song from DB
 
-            del songs.favourites_song_list[current_index]
+            del songs.favourites_song_list[current_index] # Remove song from local favourites list
 
-            self.load_favourites_into_app()
+            self.load_favourites_into_app() # Reload UI
             print(f"Successfully removed: {song_to_remove}")
 
         except Exception as e:
@@ -110,7 +113,7 @@ class FavouritesManager:
 
     # Remove All Songs From Favourites
     def remove_all_songs_from_favourites(self):
-        if self.main_window.favourites_listWidget.count() == 0:
+        if self.main_window.favourites_listWidget.count() == 0: # Ensure there are favourites to remove
             QMessageBox.information(
                 self.main_window,
                 "Remove Song from Favourites",
@@ -120,13 +123,13 @@ class FavouritesManager:
             return
 
         try:
-            delete_all_songs_from_database_table(table="favourites")
-            self.main_window.favourites_listWidget.clear()
+            delete_all_songs_from_database_table(table="favourites") # Remove all songs from DB
+            self.main_window.favourites_listWidget.clear() # Clear UI list
 
-            if hasattr(self, "load_favourites_into_app"):
+            if hasattr(self, "load_favourites_into_app"): # Reload favourites if applicable
                 self.load_favourites_into_app()
 
-            if self.main_window.favourites_listWidget.count() == 0:
+            if self.main_window.favourites_listWidget.count() == 0:  # Confirm removal if the UI list is empty
                 QMessageBox.information(
                     self.main_window,
                     "Favourites",

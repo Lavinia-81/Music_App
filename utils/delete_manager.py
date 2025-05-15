@@ -143,4 +143,5 @@ class DeleteManager:
                 print(f"Deleted playlist '{playlist}' successfully!")
 
         except Exception as e:
-            print(f"Error deleting playlist '{playlist}': {e}")
+            print(f"Error deleting playlist: {e}")
+

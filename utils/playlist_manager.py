@@ -1,6 +1,10 @@
+from PyQt6.QtMultimedia import QMediaPlayer
 from PyQt6.QtWidgets import QListWidgetItem, QMessageBox, QInputDialog
 from PyQt6.QtGui import QIcon
 import os.path
+
+from PyQt6.uic.properties import QtWidgets
+
 from db_functions import *
 from utils.playlist_popup import PlaylistDialog
 from utils import songs
@@ -36,26 +40,29 @@ class PlaylistManager:
     # Create new playlist
     def new_playlist(self):
         try:
-            existing = get_playlist_tables()
+            existing = get_playlist_tables() # Get existing playlist names
             name, ok = QInputDialog.getText(self.main_window, "Create new playlist", "Enter playlist name")
 
+            # Validate playlist name (must not contain invalid characters)
             if not ok or not name.strip() or any(c in name for c in r'\/:*?"<>|'):
                 QMessageBox.information(self.main_window, "Name Error", "Invalid playlist name.")
                 return
 
+            # If playlist does not exist, create it
             if name not in existing:
-                create_database_or_database_table(name)
+                create_database_or_database_table(name)  # Create new database table for playlist
                 self.load_playlists()
                 print(f"Playlist '{name}' created successfully.")
             else:
+                # Ask user whether they want to replace an existing playlist
                 caution = QMessageBox.question(
                     self.main_window, "Replace Playlist",
                     f"A playlist with name '{name}' already exists.\nDo you want to continue?",
                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
                 )
                 if caution == QMessageBox.StandardButton.Yes:
-                    delete_database_table(name)
-                    create_database_or_database_table(name)
+                    delete_database_table(name)  #  Delete existing playlist
+                    create_database_or_database_table(name)  # Create a new one
                     self.load_playlists()
                     print(f"Playlist '{name}' replaced successfully.")
 
@@ -66,44 +73,44 @@ class PlaylistManager:
     # Delete a playlist
     def delete_playlist(self):
         try:
-            selected_item = self.main_window.playlists_listWidget.currentItem()
-            if selected_item is None:
+            selected_item = self.main_window.playlists_listWidget.currentItem()   # Get selected playlist
+            if selected_item is None:  # If nothing is selected, show a message
                 QMessageBox.information(self.main_window, "Delete Playlist", "No playlist selected.")
                 return
 
-            playlist = selected_item.text().strip()
+            playlist = selected_item.text().strip() # Get playlist name
 
-            if not playlist:
+            if not playlist: # Ensure the playlist name is valid
                 QMessageBox.information(self.main_window, "Delete Playlist", "Invalid playlist name.")
                 return
 
+            # Confirm deletion with user
             confirmation = QMessageBox.question(
                 self.main_window, "Delete Playlist",
                 f"Are you sure you want to delete the playlist '{playlist}'? This action cannot be undone.",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
-
             if confirmation == QMessageBox.StandardButton.Yes:
                 delete_database_table(playlist)
                 self.load_playlists()
                 print(f"Deleted playlist '{playlist}'.")
         except Exception as e:
-            print(f"Error deleting playlist '{playlist}': {e}")
+            print(f"Error deleting playlist: {e}")
 
 
-    # Delete all playlists
+    # Delete all playlists except "favourites"
     def delete_all_playlists(self):
         try:
             playlists = get_playlist_tables()
             if "favourites" in playlists:
-                playlists.remove("favourites")
+                playlists.remove("favourites") # Keep favourites playlist
 
             caution = QMessageBox.question(
                 self.main_window, "Delete all Playlists",
-                "This action will delete all playlists and it cannot be reversed.\nDo you want to continue?",
+                "This action will delete all playlists and it cannot be reversed.\n"
+                "Do you want to continue?",
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
-
             if caution == QMessageBox.StandardButton.Yes:
                 for playlist in playlists:
                     delete_database_table(playlist)
@@ -115,112 +122,134 @@ class PlaylistManager:
             print(f"Error deleting all playlists: {e}")
 
 
-    # Add song to playlist
+    # Add a song to a selected playlist
     def add_a_song_to_a_playlist(self):
+        options = get_playlist_tables()  # Get available playlists
+        if "favourites" in options:
+            options.remove("favourites")  # Exclude favourites
+
+        options.insert(0, "--Click to Select--")  # Default selection prompt
+
+        # Prompt user to select a playlist
+        playlist, ok = QInputDialog.getItem(
+            self.main_window, "Add song to playlist",
+            "Choose the desired playlist", options, editable=False)
+
+        if not ok or playlist == "--Click to Select--":  # Ensure valid selection
+            QMessageBox.information(
+                self.main_window, "Add song to playlist",
+                "No playlist was selected.")
+            return
+
         try:
-            options = get_playlist_tables()
-            if "favourites" in options:
-                options.remove("favourites")
+            current_index = self.main_window.loaded_songs_listWidget.currentRow()
+            song = songs.current_song_list[current_index]
 
-            options.insert(0, "--Click to Select--")
-            playlist, ok = QInputDialog.getItem(self, "Add song to playlist", "Choose the desired playlist", options,
-                                                editable=False)
-
-            if not ok or playlist == "--Click to Select--":
-                QMessageBox.information(self, "Add song to playlist", "No playlist was selected.")
-                return
-
-            song_list = songs.current_song_list
-            list_widget = self.main_window.loaded_songs_listWidget
-
-            if self.main_window.stackedWidget.currentIndex() == 2:
-                song_list = songs.favourites_song_list
-                list_widget = self.main_window.favourites_listWidget
-
-            if not song_list:
-                QMessageBox.information(self, "Unsuccessful", "No songs available.")
-                return
-
-            current_index = list_widget.currentRow()
-            if current_index == -1 or current_index >= len(song_list):
-                QMessageBox.information(self, "Unsuccessful", "No song selected.")
-                return
-
-            song = song_list[current_index]
-
-            if not song or song.strip() == "":
-                print("Error: Song name is empty!")
-                return
-
-            add_song_to_database_table(song=song, table=playlist)
-            self.load_playlists()
-
-            print(f"Added '{song}' to playlist '{playlist}'.")
-
+            if not song.strip():  # Validate song name
+                raise ValueError("Song name is empty!")
         except Exception as e:
-            print(f"Error adding song to playlist '{playlist}': {e}")
+            QMessageBox.information(self.main_window, "Unsuccessful", "No song was selected.")
+            return
+
+        add_song_to_database_table(song=song, table=playlist)  # Add song to playlist
+        self.load_playlists()
+
+        print(f"Added '{song}' to playlist '{playlist}'.")  # Debugging output
 
 
     # Add all current songs to a playlist
     def add_all_current_songs_to_a_playlist(self):
-        try:
-            options = get_playlist_tables()
-            if "favourites" in options:
-                options.remove("favourites")
-            options.insert(0, "--Click to Select--")
-            playlist, ok = QInputDialog.getItem(self.main_window, "Add song to playlist", "Choose the desired playlist", options, editable=False)
-            if not ok or playlist == "--Click to Select--":
-                QMessageBox.information(self.main_window, "Add song to playlist", "No playlist was selected")
-                return
+        options = get_playlist_tables()  # Get available playlists
+        if "favourites" in options:
+            options.remove("favourites")  # Exclude favourites
 
-            if not songs.current_song_list:
-                QMessageBox.information(self.main_window, "Add songs to playlist", "Song list is empty")
-                return
+        options.insert(0, "--Click to Select--")  # Default selection prompt
 
-            for song in songs.current_song_list:
-                if not song or song.strip() == "":
-                    print("Error: Song name is empty!")
-                    continue
+        # Prompt user to select a playlist
+        playlist, ok = QInputDialog.getItem(
+            self.main_window, "Add song to playlist",
+            "Choose the desired playlist", options, editable=False)
 
-                add_song_to_database_table(song=song, table=playlist)
+        if not ok or playlist == "--Click to Select--":  # Validate selection
+            QMessageBox.information(self.main_window, "Add song to playlist", "No playlist was selected")
+            return
 
-            self.load_playlists()
-            print(f"Added {len(songs.current_song_list)} songs to playlist '{playlist}'.")
+        if not songs.current_song_list:  # Ensure there are songs in the list
+            QMessageBox.information(self.main_window, "Add songs to playlist", "Song list is empty")
+            return
 
-        except Exception as e:
-            print(f"Error adding songs to playlist '{playlist}': {e}")
+        # Add each song to the selected playlist
+        for song in songs.current_song_list:
+            add_song_to_database_table(song=song, table=playlist)
+
+        self.load_playlists()
+
+        print(f"Added {len(songs.current_song_list)} songs to playlist '{playlist}'.")  # Debug output
+
+
+    # Add currently playing song to a playlist
+    def add_currently_playing_to_a_playlist(self):
+        if self.main_window.player.playbackState() != QMediaPlayer.PlaybackState.PlayingState:
+            QMessageBox.information(self.main_window, "Add current song to playlist", "No song is playing in queue")
+            return
+
+        options = get_playlist_tables()  # Get available playlists
+        if "favourites" in options:
+            options.remove("favourites")  # Exclude favourites
+
+        options.insert(0, "--Click to Select--")  # Default selection prompt
+
+        # Prompt user to select a playlist
+        playlist, ok = QInputDialog.getItem(
+            self.main_window, "Add song to playlist",
+            "Choose the desired playlist", options, editable=False)
+
+        if not ok or playlist == "--Click to Select--":  # Validate selection
+            QMessageBox.information(self.main_window, "Add song to playlist", "No playlist was selected.")
+            return
+
+        # Get currently playing media source
+        current_media = self.main_window.player.source()
+        song = current_media.toString().replace("file:///", "")  # Get file path correctly
+
+        # Ensure the song path is valid before adding
+        if not song.strip():
+            QMessageBox.information(self.main_window, "Add song to playlist", "Error: No valid song found.")
+            return
+
+        add_song_to_database_table(song=song, table=playlist)  # Add song to database
+        self.load_playlists()
+
+        print(f"Added '{song}' to playlist '{playlist}'.")  # Debugging output
 
 
     # Load playlists songs to current list
     def load_playlist_songs_to_current_list(self, playlist):
         try:
             playlist_songs = fetch_all_songs_from_database_table(playlist)
-            if not playlist_songs:
+            if len(playlist_songs) == 0:
                 QMessageBox.information(self.main_window, "Load playlist song", "Playlist is empty")
                 return
 
-            self.main_window.loaded_songs_listWidget.clear()
+            # self.main_window.loaded_songs_listWidget.clear()
             for song in playlist_songs:
-                if not song or song.strip() == "":
-                    continue
-
-                item = QListWidgetItem(QIcon("images/MusicListItem.png"), os.path.basename(song))
-                self.main_window.loaded_songs_listWidget.addItem(item)
-
-            # print(f"Loaded {len(playlist_songs)} songs from playlist '{playlist}'.")
+                songs.current_song_list.append(song)
+                self.main_window.loaded_songs_listWidget.addItem(
+                    QListWidgetItem(
+                        QIcon("images/MusicListItem.png"),
+                        os.path.basename(song)))
 
         except Exception as e:
             print(f"Error loading songs from playlist '{playlist}': {e}")
 
 
-    # Show Playlist Content
+    # Function to display the content of a selected playlist
     def show_playlist_content(self):
         try:
-            playlist = self.main_window.playlists_listWidget.currentItem().text()
-            songs = fetch_all_songs_from_database_table(playlist)
-            songs_only = [os.path.basename(song[0]) for song in songs]
-            playlist_dialog = PlaylistDialog(songs_only, f'{playlist}')
+            playlist = self.main_window.playlists_listWidget.currentItem().text() # Get the name of the selected playlist from the UI list
+            songs = fetch_all_songs_from_database_table(playlist)  # Retrieve all songs stored in the selected playlist from the database
+            songs_only = [os.path.basename(song) for song in songs] # Extract only the song file names (excluding full paths)
+            playlist_dialog = PlaylistDialog(songs_only, f'{playlist}') # Create and display a dialog window showing playlist contents
             playlist_dialog.exec()
-
         except Exception as e:
             print(f"Showing Playlist Content Error: {e}")
